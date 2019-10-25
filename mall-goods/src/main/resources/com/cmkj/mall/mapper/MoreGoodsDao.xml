@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmkj.mall.goods.dao.MoreGoodsDao">
+    <!--根据销量状态查询热门商品 -->
+    <select id="getMoreHotSaleGoodsList"  resultType="com.cmkj.mall.goods.entity.MoreGoods">
+         SELECT
+          pp.id,pp.name,pp.pic,pp.hot_sale_status as  hotSaleStatus,pp.sale
+          from pms_product as pp
+          WHERE hot_sale_status=1
+    </select>
+    <!--热售，新上没有符合的商品，就推送商品 -->
+    <select id="getMoreGoodsList"  resultType="com.cmkj.mall.goods.entity.MoreGoods">
+         select pp.id,pp.name,pp.pic,pp.sale,pp.price,pp.stock  from
+         pms_product as pp
+    </select>
+
+    <!--根据新品状态展示新上商品 -->
+    <select id="getMoreNewGoodsList" resultType="com.cmkj.mall.goods.entity.MoreGoods">
+        select pp.id,pp.name,pp.pic,pp.new_status as newStatus ,pp.price,pp.stock from
+         pms_product as pp
+         where new_status=1
+    </select>
+
+</mapper>

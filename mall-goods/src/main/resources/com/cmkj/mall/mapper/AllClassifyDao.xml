@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmkj.mall.goods.dao.AllClassifyDao">
+
+    <resultMap id="BaseResultMap" type="com.cmkj.mall.goods.entity.AllClassify">
+        <id column="id" property="id" />
+        <result column="name"  property="name" />
+        <association column="id"  property="allClassify" select="selectByPid"/>
+    </resultMap>
+
+    <!--找到一级分类下的二级分类-->
+    <select id="selectByPid" resultMap="BaseResultMap">
+        select id,name,parent_id AS parentId
+        from pms_product_category
+        where parent_id=#{id};
+    </select>
+
+    <!--找到一级分类-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT id,name
+        FROM pms_product_category
+         WHERE parent_id=0
+    </select>
+
+</mapper>

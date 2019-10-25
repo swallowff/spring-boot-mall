@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmkj.mall.order.dao.CartItemDao">
+    <sql id="CartItemsListVoColumns">
+        a.id AS itemId,
+        a.product_id AS spuId,
+        a.product_sku_id AS skuId,
+        a.quantity AS quantity,
+        a.product_name AS productName,
+        a.sp1 AS sp1,
+        a.sp2 AS sp2,
+        a.sp3 AS sp3,
+        a.product_pic AS productPic,
+        IF(p.publish_status = 1,1,0) AS isOnShelf,
+        k.stock AS stock,
+        k.price AS price
+    </sql>
+
+    <select id="selectItemsWithSkuInfo" resultType="CartItemsListVO">
+        SELECT
+        <include refid="CartItemsListVoColumns"/>
+        FROM oms_cart_item a
+        LEFT JOIN pms_product p ON p.id = a.product_id
+        LEFT JOIN pms_sku_stock k ON k.id = a.product_sku_id
+        <where>
+            <if test="memberId != null">
+              AND a.member_id = #{memberId}
+            </if>
+            AND a.delete_status = 0
+        </where>
+    </select>
+
+</mapper>

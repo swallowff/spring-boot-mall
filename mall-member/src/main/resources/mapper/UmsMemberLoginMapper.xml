@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmkj.mall.member.dao.UmsMemberLoginDao">
+	
+    <select id="getUserInfo" resultType="com.cmkj.mall.member.util.PageData" parameterType="com.cmkj.mall.member.util.PageData">
+	    SELECT
+			a.id AS memberId,
+			a.user_id AS userId,
+			a.username,
+			a.`password`,
+			a.password_pay AS passwordPay,
+			a.nickname,
+			a.phone,
+			a.create_time AS createTime,
+			a.icon,
+			a.gender,
+			a.birthday,
+			a.city,
+			a.job,
+			a.meall,
+			a.personalized_signature AS personalizedSignature,
+			a.source_type AS sourceType,
+			a.integration,
+			a.growth,
+			a.luckey_count AS luckeyCount,
+			a.history_integration AS historyIntegration,
+			a.unionid,
+			a.app_openid AS appOpenid,
+			a.applet_openid AS appletOpenid,
+			a.bjnews_openid AS bjnewsOpenid,
+			a.bank_name AS bankName,
+			a.bank_card AS bankCard,
+			a.idcard,
+			a.idcard_from AS idcardFrom,
+			a.idcard_name AS idcardName,
+			a.group_id AS groupId,
+			a.group_leve AS groupLeve,
+			a.referrer,
+			a.referrer_second AS referrerSecond,
+			a.referrer_third AS referrerThird,
+			a.referrer_layer AS referrerLayer,
+			b.UF_QUALIFICATION AS qualification,
+			ifnull( b.UF_SHOP_COIN, 0 ) AS shopCoin,
+			ifnull( b.UF_AWARD_COIN, 0 ) AS awardCoin,
+			ifnull( b.UF_PV_COIN, 0 ) AS pvCoin,
+			ifnull( b.UF_RECOST_COIN, 0 ) AS recostCoin,
+			ifnull( b.UF_SHOP_SCORE, 0 ) AS shopScore,
+			ifnull( b.UF_VOUCHER, 0 ) AS voucher,
+			ifnull( b.UF_CHARTIES, 0 ) AS charties,
+			ifnull( b.UF_TOUR_SCORE, 0 ) AS tourScore,
+			ifnull( b.UF_TRANSDUCTIVE_COIN, 0 ) AS transductive,
+			ifnull( b.UF_PERSONALCONSUMPTION_COIN, 0 ) AS personalConsumption,
+			ifnull( b.UF_DECORATIONFUND_COIN, 0 ) AS decorationFund,
+			ifnull( b.UF_SUPPLYDISCOUNT_COIN, 0 ) AS supplyDiscount,
+			c.`name` AS `level`,
+			c.priviledge_register_help AS registerHelp 
+		FROM
+			ums_member a
+			LEFT JOIN user_finance b ON b.FK_UI_ID = a.user_id
+			LEFT JOIN ums_member_level c ON c.id = a.member_level_id
+		WHERE
+			a.status = 1
+		<if test="_parameter.containsKey('userId')">
+			AND a.user_id = #{userId}
+		</if>
+		<if test="_parameter.containsKey('appOpenid')">
+			AND a.app_openid = #{appOpenid}
+		</if>
+		<if test="_parameter.containsKey('appletOpenid')">
+			AND a.applet_openid = #{appletOpenid}
+		</if>
+		<if test="_parameter.containsKey('bjnewsOpenid')">
+			AND a.bjnews_openid = #{bjnewsOpenid}
+		</if>
+		<if test="_parameter.containsKey('phone')">
+			AND a.phone = #{phone}
+		</if>
+			LIMIT 1
+    </select>
+    
+    <insert id="insertMember" useGeneratedKeys="true" keyProperty="id" parameterType="com.cmkj.mall.member.dto.UmsMemberModel">
+		INSERT ums_member (
+			member_level_id,
+			user_id,
+			nickname,
+			phone,
+			status,
+			create_time,
+			<if test="password != null">
+			`password`,
+			</if>
+			<if test="referrer != 0">
+			referrer,
+			</if>
+			<if test="referrerSecond != 0">
+			referrer_second,
+			</if>
+			<if test="referrerThird != 0">
+			referrer_third,
+			</if>
+			<if test="referrerLayer != null">
+			referrer_layer,
+			</if>
+			<if test="appOpenid != null">
+			app_openid,
+			</if>
+			<if test="appletOpenid != null">
+			applet_openid,
+			</if>
+			<if test="bjnewsOpenid != null">
+			bjnews_openid,
+			</if>
+			icon
+		)
+		VALUES
+			(
+				#{levelId},
+				#{userId},
+				#{nickname},
+				#{phone},
+				#{status},
+				#{createTime},
+				<if test="password != null">
+				#{password},
+				</if>
+				<if test="referrer != 0">
+				#{referrer},
+				</if>
+				<if test="referrerSecond != 0">
+				#{referrerSecond},
+				</if>
+				<if test="referrerThird != 0">
+				#{referrerThird},
+				</if>
+				<if test="referrerLayer != null">
+				#{referrerLayer},
+				</if>
+				<if test="appOpenid != null">
+				#{appOpenid},
+				</if>
+				<if test="appletOpenid != null">
+				#{appletOpenid},
+				</if>
+				<if test="bjnewsOpenid != null">
+				#{bjnewsOpenid},
+				</if>
+				#{icon}
+			)
+    </insert>
+    
+    <select id="getReferralInfo" resultType="com.cmkj.mall.member.util.PageData">
+		SELECT
+			referrer,
+			referrer_second AS referrerSecond,
+			referrer_third AS referrerThird,
+			referrer_layer AS referrerLayer 
+		FROM
+			ums_member 
+		WHERE
+			user_id = #{referralId} 
+			LIMIT 1
+    </select>
+    
+</mapper>

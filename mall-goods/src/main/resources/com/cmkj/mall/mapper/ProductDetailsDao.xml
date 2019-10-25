@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmkj.mall.goods.dao.ProductDetailsDao">
+   <!-- <resultMap id="BaseResultMap" type="com.cmkj.mall.goods.entity.ProductDetails">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="pic" jdbcType="VARCHAR" property="pic" />
+        <result column="sale" jdbcType="INTEGER" property="sale" />
+        <result column="price" jdbcType="DECIMAL" property="price" />
+        <result column="stock" jdbcType="INTEGER" property="stock" />
+        <result column="description" jdbcType="LONGVARCHAR" property="description" />
+        <collection property="tagName" javaType="com.cmkj.mall.model.pms.PmsProductTag"
+                    select="selectGoodsTag" column="tag_name">
+        </collection>
+    </resultMap>
+
+    <resultMap id="TagResultMap" type="com.cmkj.mall.model.pms.PmsProductTag">
+        <id property="id" column="id" />
+        <result property="tag_name" column="tagName" />
+    </resultMap>-->
+    <!--拿到正常商品所需要的属性-->
+    <select id="getDetailsList" resultType="com.cmkj.mall.goods.entity.ProductDetails">
+          /*SELECT pp.id,pp.pic,pp.name,pp.description,
+          pp.price,pp.stock,pp.sale
+          FROM pms_product as pp*/
+        SELECT pp.id,pp.pic,pp.name,pp.description,
+        pp.price,pp.stock,pp.sale,ppt.tag_name as tagName
+        FROM pms_product as pp
+        LEFT JOIN pms_goods_tag_centre  as pgtc on pp.id=pgtc.product_id
+        LEFT JOIN pms_product_tag as ppt on pgtc.tag_id=ppt.id
+    </select>
+
+   <!-- 查询商品的标签-->
+    <!--<select id="selectGoodsTag" resultMap="TagResultMap">
+        SELECT  * FROM pms_product_tag AS ppt
+    </select>-->
+
+    <!--拿到正常商品的Spu属性-->
+    <select id="getSpuList" resultType="com.cmkj.mall.model.pms.PmsSkuStock">
+        SELECT  pss.product_id as productId ,pss.sku_code as skuCode,pss.sp1,pss.sp2,pss.sp3
+        FROM pms_sku_stock AS  pss
+        LEFT JOIN pms_product AS pp
+        ON pss.product_id = pp.id
+        WHERE product_id=#{productId}
+    </select>
+
+    <!--根据商品id拿到商品的Comment-->
+    <select id="getCommentList" resultType="com.cmkj.mall.goods.entity.ProductComment">
+        SELECT pc.id,pc.product_id AS  productId,
+                pc.member_nick_name AS  memberNickName,pc.star,
+                pc.create_time AS createTime,pc.show_status AS showStatus,pc.content,pc.member_icon AS  memberIcon
+        FROM pms_comment as pc
+        LEFT JOIN pms_product as pp on pc.product_id=pp.id
+        WHERE pc.product_id=#{productId}
+    </select>
+
+    <!--根据商品的productCategoryId拿到商品的同分类商品-->
+    <select id="getPushGoodsList" resultType="com.cmkj.mall.goods.entity.PushProduct">
+        SELECT pp.id,pp.name,pp.price,pp.sale
+        FROM pms_product as pp
+        WHERE product_category_id=#{productCategoryId}
+    </select>
+
+    <!--根据商品的id拿到商品所归属的商品标签-->
+    <select id="getGoodsTag" resultType="com.cmkj.mall.model.pms.PmsProductTag">
+        SELECT ppt.id,ppt.tag_name AS tagName FROM pms_product as pp
+        LEFT JOIN
+        pms_goods_tag_centre  as ppp
+        on
+        pp.id=ppp.product_id
+        LEFT JOIN
+        pms_product_tag  as ppt
+        on ppp.tag_id=ppt.id
+        WHERE pp.id=#{id}
+    </select>
+
+    <!--根据商品的id拿到商品所归属的商品标签-->
+    <select id="getGoodsService" resultType="com.cmkj.mall.model.pms.PmsProductService">
+        SELECT pps.id,pps.service_name AS serviceName FROM pms_product as pp
+        LEFT JOIN
+        pms_goods_service_centre  as ppsc
+        on
+        pp.id=ppsc.product_id
+        LEFT JOIN
+        pms_product_service  as pps
+        on ppsc.service_id=pps.id
+        WHERE pp.id=#{id}
+    </select>
+
+</mapper>

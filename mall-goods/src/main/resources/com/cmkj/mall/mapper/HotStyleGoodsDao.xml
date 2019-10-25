@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmkj.mall.goods.dao.HotStyleGoodsDao">
+
+    <!--根据爆款状态商品-->
+    <select id="getHotStyleList" resultType="com.cmkj.mall.goods.entity.HotStyleGoods">
+        SELECT pp.id,pp.name,pp.price,pp.pic,pp.sale,pp.hot_style_status as hotStyleStatus
+        FROM pms_product  as  pp
+        WHERE hot_style_status=1
+    </select>
+
+</mapper>

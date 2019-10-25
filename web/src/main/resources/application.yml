@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: @profiles.active@  #动态配置文件,方便maven打包 使用: mvn clean package -Dmaven.test.skip=true -P dev
+
+mybatis:
+  mapper-locations: classpath*:dao/*.xml,classpath*:mapper/**/*.xml,classpath*:com/**/mapper/*.xml
+  type-aliases-package: com.cmkj.mall.*.entity;com.cmkj.mall.*.model;com.cmkj.mall.*.vo
+
+jwt:
+  tokenHeader: Authorization #JWT存储的请求头
+  secret: mySecret #JWT加解密使用的密钥
+  expiration: 604800 #JWT的超期限时间(60*60*24)
+  tokenHead: Bearer  #JWT负载中拿到开头
+
+

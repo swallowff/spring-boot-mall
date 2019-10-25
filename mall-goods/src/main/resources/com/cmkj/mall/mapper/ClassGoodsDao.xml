@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmkj.mall.goods.dao.ClassGoodsDao">
+
+    <!--根据parent_id来查询对应的父类下所有商品-->
+    <select id="getGoods" resultType="com.cmkj.mall.goods.entity.ClassGoods">
+        SELECT pp.id,pp.name,pp.price,pp.product_category_id,pp.pic,pp.sale,pp.stock
+        FROM pms_product  as  pp
+        LEFT JOIN pms_product_category as ppc on
+        pp.product_category_id=ppc.id
+        WHERE ppc.parent_id=#{parentId}
+    </select>
+
+
+
+</mapper>

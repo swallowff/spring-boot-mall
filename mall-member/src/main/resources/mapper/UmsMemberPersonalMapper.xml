@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmkj.mall.member.dao.UmsMemberPersonalDao">
+	
+	<select id="getMyCouponNum" resultType="Integer">
+		SELECT
+			COUNT(a.id)
+		FROM
+			sms_coupon_history a
+		LEFT JOIN sms_coupon b ON b.id = a.coupon_id
+		WHERE
+			a.member_id = #{memberId}
+		AND a.use_status = 0
+		AND b.end_time &gt; NOW()
+	</select>
+	
+	<select id="getMyOrderStatusNum" resultType="com.cmkj.mall.member.util.PageData">
+		SELECT
+			COUNT(a.`status` = 0 OR NULL) AS waitPay,<!-- 待付款 -->
+			COUNT(a.`status` = 1 OR NULL) AS waitShipments,<!-- 待发货 -->
+			COUNT((a.`status` = 2 AND a.confirm_status = 0) OR NULL) AS waitReceiving,<!-- 待收货 -->
+			COUNT((a.`status` = 3  AND ISNULL(a.comment_time)) OR NULL) AS waitComment,<!-- 待评论 -->
+			COUNT(b.`status` in (0,1) OR NULL) AS waitAfterSal<!-- 售后 -->
+		FROM
+			oms_order a
+		LEFT JOIN oms_order_return_apply b ON b.order_id = a.id
+		WHERE
+			a.member_id = #{memberId}
+		AND a.delete_status = 0
+	</select>
+	
+</mapper>

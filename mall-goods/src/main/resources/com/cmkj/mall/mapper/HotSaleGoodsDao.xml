@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmkj.mall.goods.dao.HotSaleGoodsDao">
+    <!--根据热售状态查询热门商品-->
+    <select id="getHotSaleGoodsList"  resultType="com.cmkj.mall.goods.entity.HotSaleGoods">
+          SELECT
+          pp.id,pp.name,pp.pic,pp.hot_sale_status as  hotSaleStatus,pp.sale
+          from pms_product as pp
+          WHERE hot_sale_status=1
+    </select>
+    <!--如果没有满足热门商品跟新品商品，就推荐商品过去 -->
+    <select id="getGoodsList"  resultType="com.cmkj.mall.goods.entity.HotSaleGoods">
+         select pp.id,pp.name,pp.pic,pp.sale,pp.sort from
+         pms_product as pp
+    </select>
+
+    <!--根据新品状态查询新品商品-->
+    <select id="getNewGoodsList" resultType="com.cmkj.mall.goods.entity.HotSaleGoods">
+        select pp.id,pp.name,pp.pic,pp.new_status as newStatus ,pp.price from
+         pms_product as pp
+         where new_status=1
+    </select>
+
+</mapper>
